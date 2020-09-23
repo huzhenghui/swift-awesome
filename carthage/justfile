@@ -1,0 +1,41 @@
+_: just-choose
+
+just-choose:
+    #!/usr/bin/env sh
+    choose_recipe=$(just --summary | tr ' ' '\n' | /usr/local/opt/choose-gui/bin/choose)
+    echo "Choose Recipe: ${choose_recipe}"
+    just "${choose_recipe}"
+
+just-list:
+    just --list
+
+just-evaluate:
+    just --evaluate
+
+carthage-help:
+    carthage help
+
+carthage-version:
+    carthage version
+
+# macOS : 1 : carthage bootstrap
+carthage-bootstrap-macOS:
+    cd Cartfiles/RxSwift && carthage bootstrap --no-build --verbose --platform macOS --no-use-binaries
+
+# macOS : 2 : carthage build
+carthage-build-macOS:
+    cd Cartfiles/RxSwift && carthage build --platform macOS --no-use-binaries --verbose
+    cd Cartfiles/RxSwift && ls -1 ./Carthage/Build/Mac
+
+# iOS : 1 : carthage bootstrap
+carthage-bootstrap-iOS:
+    cd Cartfiles/RxSwift && carthage bootstrap --no-build --verbose --platform iOS --no-use-binaries
+
+# iOS : 2 : carthage build
+carthage-build-iOS:
+    cd Cartfiles/RxSwift && carthage build --platform iOS --no-use-binaries --verbose
+    cd Cartfiles/RxSwift && ls -1 ./Carthage/Build/iOS
+
+clean:
+    cd Cartfiles/RxSwift && trash ./carthage
+    cd Cartfiles/RxSwift && trash ./Cartfile.resolved
