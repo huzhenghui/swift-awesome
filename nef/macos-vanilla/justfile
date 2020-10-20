@@ -1,0 +1,59 @@
+_: just-choose
+
+just-choose:
+    #!/usr/bin/env sh
+    choose_recipe=$(just --summary | tr ' ' '\n' | /usr/local/opt/choose-gui/bin/choose)
+    echo "Choose Recipe: ${choose_recipe}"
+    just "${choose_recipe}"
+
+macos_bowplayground_dir := "./macos-bowplayground"
+macos_vanilla_name := "MacosVanilla"
+markdown_output := "./markdown-output"
+jekyll_output := "./jekyll-output"
+carbon_output := "./carbon-output"
+
+# Create macos vanilla : 1 : Create by nef
+nef-playground-macos-vanilla:
+    nef playground --output "{{macos_bowplayground_dir}}" --name "{{macos_vanilla_name}}" --platform macos
+
+# Create macos vanilla : 2 : Open by Xcode
+open-playground-macos-vanilla:
+    open "{{macos_bowplayground_dir}}/{{macos_vanilla_name}}.app"
+
+# Create macos vanilla : 3 : Compile by nef
+compile-playground-macos-vanilla:
+    nef compile --project "{{macos_bowplayground_dir}}/{{macos_vanilla_name}}.app"
+    du -d 3 -h "{{macos_bowplayground_dir}}/{{macos_vanilla_name}}.app"
+
+# Create macos vanilla : 4 : Clean by nef
+clean-playground-macos-vanilla:
+    nef clean --project "{{macos_bowplayground_dir}}/{{macos_vanilla_name}}.app"
+    du -d 3 -h "{{macos_bowplayground_dir}}/{{macos_vanilla_name}}.app"
+
+# Create macos vanilla : 5 : Generate Markdown by nef
+markdown-playground-macos-vanilla:
+    nef markdown --project "{{macos_bowplayground_dir}}/{{macos_vanilla_name}}.app" --output "{{markdown_output}}"
+
+# Create macos vanilla : 6 : Generate Jekyll by nef
+jekyll-playground-macos-vanilla:
+    nef jekyll --project "{{macos_bowplayground_dir}}/{{macos_vanilla_name}}.app" --output "{{jekyll_output}}/{{macos_vanilla_name}}"
+
+# Create macos vanilla : 7 : Render Carbon for Created PlayGround by nef
+carbon-playground-macos-vanilla:
+    nef carbon --project "{{macos_bowplayground_dir}}/{{macos_vanilla_name}}.app" --output "{{carbon_output}}"
+
+# Create macos vanilla : Clean PlayGround
+trash-playground-macos-vanilla:
+    trash "{{macos_bowplayground_dir}}/{{macos_vanilla_name}}.app"
+
+# Create macos vanilla : Clean Markdown
+trash-playground-macos-vanilla-markdown:
+    trash "{{markdown_output}}/$(echo {{macos_vanilla_name}} | tr [A-Z] [a-z])"
+
+# Create macos vanilla : clean Jekyll
+trash-playground-macos-vanilla-jekyll:
+    trash "{{jekyll_output}}/{{macos_vanilla_name}}"
+
+# Create macos vanilla : clean Carbon
+trash-playground-macos-vanilla-carbon:
+    trash "{{carbon_output}}/$(echo {{macos_vanilla_name}} | tr [A-Z] [a-z])"
