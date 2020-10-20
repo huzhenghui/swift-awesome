@@ -1,0 +1,56 @@
+_: just-choose
+
+just-choose:
+    #!/usr/bin/env sh
+    choose_recipe=$(just --summary | tr ' ' '\n' | /usr/local/opt/choose-gui/bin/choose)
+    echo "Choose Recipe: ${choose_recipe}"
+    just "${choose_recipe}"
+
+xcode_playground := "./xcode-playground"
+ios_game_playground_dir := "iOS-Game.playground"
+transform_bowplayground := "./transform-bowplayground"
+ios_game_bowplayground_name := "IosGame"
+markdown_output := "./markdown-output"
+jekyll_output := "./jekyll-output"
+carbon_output := "./carbon-output"
+
+# iOS Game : 1 : Open PlayGround by Xcode
+open-xcode-playground-iOS-Game:
+    open "{{xcode_playground}}/{{ios_game_playground_dir}}"
+
+# iOS Game : 2 : Transform PlayGround by nef
+nef-playground-transform-iOS-Game:
+    nef playground --playground "{{xcode_playground}}/{{ios_game_playground_dir}}" --output "{{transform_bowplayground}}" --name "{{ios_game_bowplayground_name}}" --platform ios
+
+# iOS Game : 3 : Open Transformed PlayGround by Xcode
+open-transformed-playground-iOS-Game:
+    open "{{transform_bowplayground}}/{{ios_game_bowplayground_name}}.app"
+
+# iOS Game : 4 : Render Markdown for Transformed PlayGround by nef
+markdown-transformed-playground-iOS-Game:
+    nef markdown --project "{{transform_bowplayground}}/{{ios_game_bowplayground_name}}.app" --output "{{markdown_output}}"
+
+# iOS Game : 5 : Render Jekyll for Transformed PlayGround by nef
+jekyll-transformed-playground-iOS-Game:
+    nef jekyll --project "{{transform_bowplayground}}/{{ios_game_bowplayground_name}}.app" --output "{{jekyll_output}}/{{ios_game_bowplayground_name}}"
+
+# iOS Game : 6 : Render Carbon for Transformed PlayGround by nef
+carbon-transformed-playground-iOS-Game:
+    nef carbon --project "{{transform_bowplayground}}/{{ios_game_bowplayground_name}}.app" --output "{{carbon_output}}"
+
+# iOS Game : Clean Transformed PlayGround
+trash-transformed-playground-iOS-Game:
+    trash "{{transform_bowplayground}}/{{ios_game_bowplayground_name}}.app"
+
+# iOS Game : Clean Markdown
+trash-transformed-playground-iOS-Game-markdown:
+    trash "{{markdown_output}}/$(echo {{ios_game_bowplayground_name}} | tr [A-Z] [a-z])"
+
+# iOS Game : clean Jekyll
+trash-transformed-playground-iOS-Game-jekyll:
+    trash "{{jekyll_output}}/{{ios_game_bowplayground_name}}"
+
+# iOS Game : clean Carbon
+trash-transformed-playground-iOS-Game-carbon:
+    trash "{{carbon_output}}/$(echo {{ios_game_bowplayground_name}} | tr [A-Z] [a-z])"
+
