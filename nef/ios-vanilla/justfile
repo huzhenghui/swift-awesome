@@ -1,0 +1,60 @@
+_: just-choose
+
+just-choose:
+    #!/usr/bin/env sh
+    choose_recipe=$(just --summary | tr ' ' '\n' | /usr/local/opt/choose-gui/bin/choose)
+    echo "Choose Recipe: ${choose_recipe}"
+    just "${choose_recipe}"
+
+ios_bowplayground_dir := "ios-bowplayground"
+ios_vanilla_name := "IosVanilla"
+markdown_output := "./markdown-output"
+jekyll_output := "./jekyll-output"
+carbon_output := "./carbon-output"
+
+# Create ios vanilla : 1 : Create by nef
+nef-playground-ios-vanilla:
+    nef playground --output "{{ios_bowplayground_dir}}" --name "{{ios_vanilla_name}}" --platform ios
+
+# Create ios vanilla : 2 : Open by Xcode
+open-playground-ios-vanilla:
+    open "{{ios_bowplayground_dir}}/{{ios_vanilla_name}}.app"
+
+# Create ios vanilla : 3 : Compile by nef
+compile-playground-ios-vanilla:
+    nef compile --project "{{ios_bowplayground_dir}}/{{ios_vanilla_name}}.app"
+    du -d 3 -h "{{ios_bowplayground_dir}}/{{ios_vanilla_name}}.app"
+
+# Create ios vanilla : 4 : Clean by nef
+clean-playground-ios-vanilla:
+    nef clean --project "{{ios_bowplayground_dir}}/{{ios_vanilla_name}}.app"
+    du -d 3 -h "{{ios_bowplayground_dir}}/{{ios_vanilla_name}}.app"
+
+# Create ios vanilla : 5 : Generate Markdown by nef
+markdown-playground-ios-vanilla:
+    nef markdown --project "{{ios_bowplayground_dir}}/{{ios_vanilla_name}}.app" --output "{{markdown_output}}"
+
+# Create ios vanilla : 6 : Generate Jekyll by nef
+jekyll-playground-ios-vanilla:
+    nef jekyll --project "{{ios_bowplayground_dir}}/{{ios_vanilla_name}}.app" --output "{{jekyll_output}}/{{ios_vanilla_name}}"
+
+# Create ios vanilla : 7 : Render Carbon for Created PlayGround by nef
+carbon-playground-ios-vanilla:
+    nef carbon --project "{{ios_bowplayground_dir}}/{{ios_vanilla_name}}.app" --output "{{carbon_output}}"
+
+# Create ios vanilla : clean PlayGround
+trash-playground-ios-vanilla:
+    trash "{{ios_bowplayground_dir}}/{{ios_vanilla_name}}.app"
+
+# Create ios vanilla : clean Markdown
+trash-playground-ios-vanilla-markdown:
+    trash "{{markdown_output}}/$(echo {{ios_vanilla_name}} | tr [A-Z] [a-z])"
+
+# Create ios vanilla : clean Jekyll
+trash-playground-ios-vanilla-jekyll:
+    trash "{{jekyll_output}}/{{ios_vanilla_name}}"
+
+# Create ios vanilla : clean Carbon
+trash-playground-ios-vanilla-carbon:
+    trash "{{carbon_output}}/$(echo {{ios_vanilla_name}} | tr [A-Z] [a-z])"
+
