@@ -1,0 +1,56 @@
+_: just-choose
+
+just-choose:
+    #!/usr/bin/env sh
+    choose_recipe=$(just --summary | tr ' ' '\n' | /usr/local/opt/choose-gui/bin/choose)
+    echo "Choose Recipe: ${choose_recipe}"
+    just "${choose_recipe}"
+
+xcode_playground := "./xcode-playground"
+ios_map_playground_dir := "iOS-Map.playground"
+transform_bowplayground := "./transform-bowplayground"
+ios_map_bowplayground_name := "IosMap"
+markdown_output := "./markdown-output"
+jekyll_output := "./jekyll-output"
+carbon_output := "./carbon-output"
+
+# iOS Map : 1 : Open PlayGround by Xcode
+open-xcode-playground-iOS-Map:
+    open "{{xcode_playground}}/{{ios_map_playground_dir}}"
+
+# iOS Map : 2 : Transform PlayGround by nef
+nef-playground-transform-iOS-Map:
+    nef playground --playground "{{xcode_playground}}/{{ios_map_playground_dir}}" --output "{{transform_bowplayground}}" --name "{{ios_map_bowplayground_name}}" --platform ios
+
+# iOS Map : 3 : Open Transformed PlayGround by Xcode
+open-transformed-playground-iOS-Map:
+    open "{{transform_bowplayground}}/{{ios_map_bowplayground_name}}.app"
+
+# iOS Map : 4 : Render Markdown for Transformed PlayGround by nef
+markdown-transformed-playground-iOS-Map:
+    nef markdown --project "{{transform_bowplayground}}/{{ios_map_bowplayground_name}}.app" --output "{{markdown_output}}"
+
+# iOS Map : 5 : Render Jekyll for Transformed PlayGround by nef
+jekyll-transformed-playground-iOS-Map:
+    nef jekyll --project "{{transform_bowplayground}}/{{ios_map_bowplayground_name}}.app" --output "{{jekyll_output}}/{{ios_map_bowplayground_name}}"
+
+# iOS Map : 6 : Render Carbon for Transformed PlayGround by nef
+carbon-transformed-playground-iOS-Map:
+    nef carbon --project "{{transform_bowplayground}}/{{ios_map_bowplayground_name}}.app" --output "{{carbon_output}}"
+
+# iOS Map : Clean Transformed PlayGround
+trash-transformed-playground-iOS-Map:
+    trash "{{transform_bowplayground}}/{{ios_map_bowplayground_name}}.app"
+
+# iOS Map : Clean Markdown
+trash-transformed-playground-iOS-Map-markdown:
+    trash "{{markdown_output}}/$(echo {{ios_map_bowplayground_name}} | tr [A-Z] [a-z])"
+
+# iOS Map : clean Jekyll
+trash-transformed-playground-iOS-Map-jekyll:
+    trash "{{jekyll_output}}/{{ios_map_bowplayground_name}}"
+
+# iOS Map : clean Carbon
+trash-transformed-playground-iOS-Map-carbon:
+    trash "{{carbon_output}}/$(echo {{ios_map_bowplayground_name}} | tr [A-Z] [a-z])"
+
