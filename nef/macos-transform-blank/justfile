@@ -1,0 +1,65 @@
+_: just-choose
+
+just-choose:
+    #!/usr/bin/env sh
+    choose_recipe=$(just --summary | tr ' ' '\n' | /usr/local/opt/choose-gui/bin/choose)
+    echo "Choose Recipe: ${choose_recipe}"
+    just "${choose_recipe}"
+
+xcode_playground := "./xcode-playground"
+macos_blank_playground_dir := "macOS-Blank.playground"
+transform_bowplayground := "./transform-bowplayground"
+macos_blank_bowplayground_name := "MacosBlank"
+markdown_output := "./markdown-output"
+jekyll_output := "./jekyll-output"
+carbon_output := "./carbon-output"
+
+# macOS Blank : 1 : Open PlayGround by Xcode
+open-xcode-playground-macOS-Blank:
+    open "{{xcode_playground}}/{{macos_blank_playground_dir}}"
+
+# macOS Blank : 2 : Transform PlayGround by nef
+nef-playground-transform-macOS-Blank:
+    nef playground --playground "{{xcode_playground}}/{{macos_blank_playground_dir}}" --output "{{transform_bowplayground}}" --name "{{macos_blank_bowplayground_name}}" --platform macos
+
+# macOS Blank : 3 : Open Transformed PlayGround by Xcode
+open-transformed-playground-macOS-Blank:
+    open "{{transform_bowplayground}}/{{macos_blank_bowplayground_name}}.app"
+
+# macOS Blank : 4 : Compile Transformed PlayGround by nef
+compile-transformed-playground-macOS-Blank:
+    nef compile --project "{{transform_bowplayground}}/{{macos_blank_bowplayground_name}}.app"
+    du -d 3 -h "{{transform_bowplayground}}/{{macos_blank_bowplayground_name}}.app"
+
+# macOS Blank : 5 : Clean by nef
+clean-transformed-playground-macOS-Blank:
+    nef clean --project "{{transform_bowplayground}}/{{macos_blank_bowplayground_name}}.app"
+    du -d 3 -h "{{transform_bowplayground}}/{{macos_blank_bowplayground_name}}.app"
+
+# macOS Blank : 6 : Render Markdown for Transformed PlayGround by nef
+markdown-transformed-playground-macOS-Blank:
+    nef markdown --project "{{transform_bowplayground}}/{{macos_blank_bowplayground_name}}.app" --output "{{markdown_output}}"
+
+# macOS Blank : 7 : Render Jekyll for Transformed PlayGround by nef
+jekyll-transformed-playground-macOS-Blank:
+    nef jekyll --project "{{transform_bowplayground}}/{{macos_blank_bowplayground_name}}.app" --output "{{jekyll_output}}/{{macos_blank_bowplayground_name}}"
+
+# macOS Blank : 8 : Render Carbon for Transformed PlayGround by nef
+carbon-transformed-playground-macOS-Blank:
+    nef carbon --project "{{transform_bowplayground}}/{{macos_blank_bowplayground_name}}.app" --output "{{carbon_output}}"
+
+# macOS Blank : Clean Transformed PlayGround
+trash-transformed-playground-macOS-Blank:
+    trash "{{transform_bowplayground}}/{{macos_blank_bowplayground_name}}.app"
+
+# macOS Blank : Clean Markdown
+trash-transformed-playground-macOS-Blank-markdown:
+    trash "{{markdown_output}}/$(echo {{macos_blank_bowplayground_name}} | tr [A-Z] [a-z])"
+
+# macOS Blank : clean Jekyll
+trash-transformed-playground-macOS-Blank-jekyll:
+    trash "{{jekyll_output}}/{{macos_blank_bowplayground_name}}"
+
+# macOS Blank : clean Carbon
+trash-transformed-playground-macOS-Blank-carbon:
+    trash "{{carbon_output}}/$(echo {{macos_blank_bowplayground_name}} | tr [A-Z] [a-z])"
